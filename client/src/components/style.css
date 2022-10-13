@@ -1,3 +1,7 @@
+.App {
+  text-align: center;
+  padding: 4em 0;
+}
 .chart .title {
   position: absolute;
   left: 0;

@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Gilda+Display&family=Poppins&display=swap");
+
+* > * {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-yellow: #f9c74f;
+  --color-purple: #9d4edd;
+}
+
+.App {
+  text-align: center;
+  padding: 4em 0;
+}
+
+.bg-yellow {
+  background-color: var(--color-yellow);
+}
+.bg-purple {
+  background-color: var(--color-purple);
+}

@@ -1,31 +1,23 @@
 import React from "react";
-
-const obj = [
-  {
-    type: "Saving",
-    color: "rgb(255, 205, 86)",
-    percent: 45,
-  },
-  {
-    type: "Investment",
-    color: "rgb(54, 162, 235)",
-    percent: 20,
-  },
-  {
-    type: "Expense",
-    color: "rgb(255, 99, 132)",
-    percent: 10,
-  },
-];
+import { getSum, getLabels } from "../helper/helper";
+import { default as api } from "../store/api";
 
 const Labels = () => {
-  return (
-    <>
-      {obj.map((v, i) => (
-        <LabelComponent key={i} data={v} />
-      ))}
-    </>
-  );
+  const { data, isFetching, isSuccess, isError } = api.useGetLabelsQuery();
+  let Transactions;
+
+  if (isFetching) {
+    Transactions = <div>Fetching</div>;
+  } else if (isSuccess) {
+    getSum(data);
+    Transactions = getLabels(data, "type").map((v, i) => (
+      <LabelComponent key={i} data={v}></LabelComponent>
+    ));
+  } else if (isError) {
+    Transactions = <div>Error</div>;
+  }
+
+  return <>{Transactions}</>;
 };
 
 const LabelComponent = ({ data }) => {
@@ -39,7 +31,7 @@ const LabelComponent = ({ data }) => {
         ></div>
         <h3 className="text-md">{data.type ?? ""}</h3>
       </div>
-      <h3 className="font-bold">{data.percent ?? 0}%</h3>
+      <h3 className="font-bold">{Math.round(data.percent) ?? 0}%</h3>
     </div>
   );
 };

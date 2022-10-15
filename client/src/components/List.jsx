@@ -1,33 +1,36 @@
 import React from "react";
 import "boxicons";
-
-const obj = [
-  {
-    name: "Saving",
-    color: "rgb(255, 205, 86)",
-  },
-  {
-    name: "Investment",
-    color: "rgb(54, 162, 235)",
-  },
-  {
-    name: "Expense",
-    color: "rgb(255, 99, 132)",
-  },
-];
+import { default as api } from "../store/api";
 
 const List = () => {
+  const { data, isFetching, isSuccess, isError } = api.useGetLabelsQuery();
+  const [deleteTransaction] = api.useDeleteTransactionMutation();
+  let Transactions;
+
+  const handlerClick = (e) => {
+    if (!e.target.dataset.id) return 0;
+    deleteTransaction({ _id: e.target.dataset.id });
+  };
+
+  if (isFetching) {
+    Transactions = <div>Fetching ...</div>;
+  } else if (isSuccess) {
+    Transactions = data.map((v, i) => (
+      <Transaction key={i} category={v} handler={handlerClick} />
+    ));
+  } else if (isError) {
+    Transactions = <div>Error</div>;
+  }
+
   return (
     <div className="flex flex-col py-6 gap-3">
       <h1 className="py-4 font-bold text-xl">History</h1>
-      {obj.map((v, i) => (
-        <Transaction key={i} category={v} />
-      ))}
+      {Transactions}
     </div>
   );
 };
 
-const Transaction = ({ category }) => {
+const Transaction = ({ category, handler }) => {
   if (!category) return null;
   return (
     <div
@@ -35,12 +38,13 @@ const Transaction = ({ category }) => {
       style={{ borderLeft: `8px solid ${category.color ?? "#e5e5e5"}` }}
     >
       <span className="block w-full">{category.name ?? ""}</span>
-      <button className="px-3">
+      <button className="px-3" onClick={handler}>
         <box-icon
-          name="trash"
+          data-id={category._id ?? ""}
           color={category.color ?? "#e5e5e5"}
           size="15px"
-        />
+          name="trash"
+        ></box-icon>
       </button>
     </div>
   );

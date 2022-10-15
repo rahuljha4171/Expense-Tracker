@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 // Category
 const categoriesSchema = mongoose.Schema({
   type: { type: String, default: "Investment" },
-  color: { type: String, default: "#fcbe44" },
+  color: { type: String, default: "#FCBE44" },
 });
 
 const transactionSchema = mongoose.Schema({
-  type: { type: String, default: "Investment" },
   name: { type: String, default: "Anonymous" },
+  type: { type: String, default: "Investment" },
   amount: { type: Number },
   date: { type: Date, default: Date.now },
 });

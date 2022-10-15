@@ -2,70 +2,59 @@ import model from "../models/model.js";
 
 export const createCategories = async (req, res) => {
   const Create = new model.Categories({
-    type: "SIP",
-    color: "#9d4edd",
+    type: "Investment",
+    color: "#FCBE44",
   });
 
-  await Create.save((error) => {
-    if (!error) {
-      return res.json(Create);
-    } else {
-      return res
-        .status(400)
-        .json({ message: `Error while crate categories ${error}` });
-    }
+  await Create.save(function (err) {
+    if (!err) return res.json(Create);
+    return res
+      .status(400)
+      .json({ message: `Error while creating categories ${err}` });
   });
 };
 
 export const getCategories = async (req, res) => {
-  const data = await model.Categories.find({});
+  let data = await model.Categories.find({});
 
-  let filter = data.map((v) =>
-    Object.assign(
-      {},
-      {
-        type: v.type,
-        color: v.color,
-      }
-    )
+  let filter = await data.map((v) =>
+    Object.assign({}, { type: v.type, color: v.color })
   );
-
   return res.json(filter);
 };
 // Transaction
 export const createTransaction = async (req, res) => {
-  const { name, type, amount } = req.body;
+  if (!req.body) return res.status(400).json("Post HTTP Data not Provided");
+  let { name, type, amount } = req.body;
 
-  const create = new model.Transaction({
+  const create = await new model.Transaction({
     name,
     type,
     amount,
     date: new Date(),
   });
-  await create.save((error) => {
-    if (!error) {
-      return res.json(create);
-    } else {
-      return res.status(400).json({ message: error });
-    }
+
+  create.save(function (err) {
+    if (!err) return res.json(create);
+    return res
+      .status(400)
+      .json({ message: `Erro while creating transaction ${err}` });
   });
 };
 
 export const getTransaction = async (req, res) => {
-  const data = await model.Transaction.find({});
-
+  let data = await model.Transaction.find({});
   return res.json(data);
 };
 
 export const deleteTransaction = async (req, res) => {
-  const data = await model.Transaction.deleteOne(req.body, (error) => {
-    if (!error) {
-      res.json("Record Deleted!");
-    }
+  if (!req.body) res.status(400).json({ message: "Request body not Found" });
+  await model.Transaction.deleteOne(req.body, function (err) {
+    if (!err) res.json("Record Deleted...!");
   })
     .clone()
-    .catch((error) => {
-      res.json("Error while deleting Transaction History");
+    .catch(function (err) {
+      res.json("Error while deleting Transaction Record");
     });
 };
 
@@ -76,11 +65,11 @@ export const getLabels = async (req, res) => {
         from: "categories",
         localField: "type",
         foreignField: "type",
-        as: "categoriesInfo",
+        as: "categories_info",
       },
     },
     {
-      $unwind: "$categoriesInfo",
+      $unwind: "$categories_info",
     },
   ])
     .then((result) => {
@@ -92,13 +81,13 @@ export const getLabels = async (req, res) => {
             name: v.name,
             type: v.type,
             amount: v.amount,
-            color: v.categoriesInfo["color"],
+            color: v.categories_info["color"],
           }
         )
       );
       res.json(data);
     })
     .catch((error) => {
-      res.status(400).json(`Lookup Collection Error: ${error}`);
+      res.status(400).json("Looup Collection Error");
     });
 };

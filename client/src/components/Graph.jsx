@@ -18,7 +18,7 @@ const Graph = () => {
   } else if (isError) {
     graphData = <div>Error</div>;
   }
-
+  console.log(data);
   return (
     <div className="flex justify-content max-w-xs mx-auto">
       <div className="item">

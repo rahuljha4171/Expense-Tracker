@@ -70,7 +70,7 @@ export const getLabels = async (req, res) => {
     },
     {
       $unwind: "$categories_info",
-    },
+    }
   ])
     .then((result) => {
       let data = result.map((v) =>
@@ -88,6 +88,6 @@ export const getLabels = async (req, res) => {
       res.json(data);
     })
     .catch((error) => {
-      res.status(400).json("Looup Collection Error");
+      res.status(400).json("Lookup Collection Error");
     });
 };

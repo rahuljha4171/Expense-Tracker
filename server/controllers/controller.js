@@ -38,7 +38,7 @@ export const createTransaction = async (req, res) => {
     if (!err) return res.json(create);
     return res
       .status(400)
-      .json({ message: `Erro while creating transaction ${err}` });
+      .json({ message: `Error while creating transaction ${err}` });
   });
 };
 

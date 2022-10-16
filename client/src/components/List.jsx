@@ -11,7 +11,7 @@ const List = () => {
     if (!e.target.dataset.id) return 0;
     deleteTransaction({ _id: e.target.dataset.id });
   };
-
+  console.log(data);
   if (isFetching) {
     Transactions = <div>Fetching ...</div>;
   } else if (isSuccess) {
@@ -32,12 +32,15 @@ const List = () => {
 
 const Transaction = ({ category, handler }) => {
   if (!category) return null;
+
   return (
     <div
       className="item flex justify-center bg-gray-50 py-2 rounded-r"
       style={{ borderLeft: `8px solid ${category.color ?? "#e5e5e5"}` }}
     >
-      <span className="block w-full">{category.name ?? ""}</span>
+      <span className="block w-full">
+        {category.name ?? ""}(₹{category.amount})
+      </span>
       <button className="px-3" onClick={handler}>
         <box-icon
           data-id={category._id ?? ""}

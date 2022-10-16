@@ -11,7 +11,7 @@ const List = () => {
     if (!e.target.dataset.id) return 0;
     deleteTransaction({ _id: e.target.dataset.id });
   };
-  console.log(data);
+
   if (isFetching) {
     Transactions = <div>Fetching ...</div>;
   } else if (isSuccess) {
